@@ -21,7 +21,7 @@ function App() {
             <Logo />
             <Form onAddItem={handleAddItem} />
             <CheckList items={listItems} onDeleteItem={handleDeleteItem} onToggleItem={handleToggleItem} />
-            <Stats />
+            <Stats items={listItems} />
         </div>
     );
 }
@@ -73,17 +73,28 @@ function CheckList({ items, onDeleteItem, onToggleItem }) {
 function Item({ item, onDeleteItem, onToggleItem }) {
     return (
         <li key={item.id}>
-            <input type="checkbox" checked={item.done} onChange={() => onToggleItem(item.id)} />
+            <input type="checkbox" value={item.done} onChange={() => onToggleItem(item.id)} />
             <span style={{ textDecoration: item.done ? "line-through" : "" }}>{item.title}</span>
             <button onClick={() => onDeleteItem(item.id)}>❌</button>
         </li>
     );
 }
 
-function Stats() {
+function Stats({ items }) {
+    if (items.length === 0) {
+        return (
+            <footer className="stats">
+                <span>📝 Kamu belum punya catatan nih, ayo buat catatan pertamamu! 📝</span>
+            </footer>
+        );
+    }
+
+    const totalItems = items.length;
+    const doneItems = items.filter((item) => item.done).length;
+    const percentage = Math.round((doneItems / totalItems) * 100);
     return (
         <footer className="stats">
-            <span></span>
+            <span>{percentage === 100 ? "🎉 Selamat! Kamu sudah menyelesaikan semua catatanmu! 🎉" : `📝 Kamu punya ${totalItems} catatan dan baru ${doneItems} yang dichecklist (${percentage}%) ✅`}</span>
         </footer>
     );
 }
