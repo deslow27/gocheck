@@ -16,11 +16,17 @@ function App() {
         setListItems((listItems) => listItems.map((item) => (item.id === id ? { ...item, done: !item.done } : item)));
     }
 
+    function handleClearItems() {
+        if (window.confirm("Apakah kamu yakin ingin menghapus semua catatan?")) {
+            setListItems([]);
+        }
+    }
+
     return (
         <div className="app">
             <Logo />
             <Form onAddItem={handleAddItem} />
-            <CheckList items={listItems} onDeleteItem={handleDeleteItem} onToggleItem={handleToggleItem} />
+            <CheckList items={listItems} onDeleteItem={handleDeleteItem} onToggleItem={handleToggleItem} onClearItems={handleClearItems} />
             <Stats items={listItems} />
         </div>
     );
@@ -58,7 +64,7 @@ function Form({ onAddItem }) {
     );
 }
 
-function CheckList({ items, onDeleteItem, onToggleItem }) {
+function CheckList({ items, onDeleteItem, onToggleItem, onClearItems }) {
     const [sortBy, setSortBy] = useState("input");
 
     function sortItems() {
@@ -88,6 +94,7 @@ function CheckList({ items, onDeleteItem, onToggleItem }) {
                     <option value="title">Urutkan berdasarkan judul</option>
                     <option value="status">Urutkan berdasarkan status</option>
                 </select>
+                <button onClick={onClearItems}>Hapus</button>
             </div>
         </div>
     );
